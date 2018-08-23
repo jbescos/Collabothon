@@ -26,7 +26,7 @@ public class TextAnalyzerTest {
 	private final URL zipFileURL = getClass().getResource(TRAIN_DATA_1);
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void categories() throws IOException {
 		File unzipped = Files.createTempDir();
 		unzipped.deleteOnExit();
