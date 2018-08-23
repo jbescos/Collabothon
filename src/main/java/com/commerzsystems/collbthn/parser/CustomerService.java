@@ -56,23 +56,32 @@ public class CustomerService {
 
         //invoice info
 		String totalAmount = "0.00";
+		String invoiceNumber = "";
+		String cathegory = "";
+		boolean description = false;
 		for (String string : input) {
 			if (string.contains("€")) {
 				totalAmount = string.substring(0, string.length() - 3);
+			}
+			if(string.contains("Nr.")){
+				int positionStart = string.indexOf("Nr.");
+		        int positionEnd = string.indexOf("Customer");
+		        invoiceNumber  = string.substring(positionStart + 4, positionEnd - 1);
+			}
+			if (description) {
+				String cathegoryLine = string;
+				int euroPosition = cathegoryLine.indexOf("€");
+				String cathegoryLineUntilEuroSign = cathegoryLine.substring(0, euroPosition - 2);
+				cathegory = cathegoryLineUntilEuroSign.substring(2, cathegoryLineUntilEuroSign.lastIndexOf(" "));
+				description = false;
+			}
+			if (string.contains("Pos")) {
+				description = true;
 			}
 		}
 
         int totalAmountInt = currencyToBigDecimalFormat(totalAmount);
 
-        String invoice = input[14];
-        int positionStart = invoice.indexOf("Nr.");
-        int positionEnd = invoice.indexOf("Customer");
-        String invoiceNumber = invoice.substring(positionStart + 4, positionEnd - 1);
-
-        String cathegoryLine = input[16];
-        int euroPosition = cathegoryLine.indexOf("€");
-        String cathegoryLineUntilEuroSign = cathegoryLine.substring(0, euroPosition - 2);
-        String cathegory = cathegoryLineUntilEuroSign.substring(2, cathegoryLineUntilEuroSign.lastIndexOf(" "));
         Invoice newInvoice = new Invoice(Integer.valueOf(invoiceNumber), totalAmountInt, cathegory);
         /////////////////////////////////////////////////////////////////
 		cathegory = cathegorizer.categorize(cathegory);
