@@ -24,6 +24,8 @@ public class FileResource {
 
 	private final Logger logger = LoggerFactory.getLogger(FileResource.class);
 
+	private TextParser textParser = new TextParser();
+
 	@PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path) throws IOException {
 
@@ -43,8 +45,6 @@ public class FileResource {
 
 		String str = ts.getText(document);
 		//Closing the document
-
-        TextParser textParser = new TextParser();
 
         textParser.parse(str);
 
@@ -75,4 +75,12 @@ public class FileResource {
 		return "Hello World!";
 	}
 	
+
+	@PostMapping("/bankview")
+	public String getCustomer(@RequestParam("name") String name) {
+		textParser.getCustomerEntry(name);
+
+		return name;
+	}
+
 }

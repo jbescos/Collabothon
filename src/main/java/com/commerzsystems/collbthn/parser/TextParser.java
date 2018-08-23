@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TextParser {
 
-    private final String TEMP_DIR = "D:/";
+    private final String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
     private final static AtomicInteger idCounter = new AtomicInteger(0);
     private static HashMap<String, Integer> idMap = new HashMap<>();
@@ -72,6 +72,10 @@ public class TextParser {
             return idMap.get(name);
         }
     }
+
+	public Integer getCustomerEntry(String name) {
+		return idMap.get(name);
+	}
 
     //create a folder for a customer
     private void createFolder(int id) {
