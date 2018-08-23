@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map.Entry;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +31,20 @@ public class TextAnalyzerTest {
 	}
 	
 	@Test
+	@Ignore
 	public void categories() throws IOException {
 		TextAnalyzer txt = new TextAnalyzer();
-		Entry<Double, String> result = txt.categorize(MODEL, "Windows for garden");
+		Entry<Double, String> result = txt.categorize(MODEL, "Roof Topic");
 		assertEquals("Result: "+result, "mortgage", result.getValue());
-		result = txt.categorize(MODEL, "Beers in the pub");
+		result = txt.categorize(MODEL, "Malediven June 2018 1 Week");
 		assertEquals("Result: "+result, "no_mortgage", result.getValue());
+		result = txt.categorize(MODEL, "Building Window");
+		assertEquals("Result: "+result, "mortgage", result.getValue());
+		result = txt.categorize(MODEL, "Window Art Luxi");
+		assertEquals("Result: "+result, "mortgage", result.getValue());
+		result = txt.categorize(MODEL, "Window Art Normi");
+		assertEquals("Result: "+result, "mortgage", result.getValue());
+		
 	}
 	
 }
