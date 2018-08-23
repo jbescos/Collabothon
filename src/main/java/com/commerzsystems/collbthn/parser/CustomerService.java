@@ -55,7 +55,7 @@ public class CustomerService {
         int positionEnd = invoice.indexOf("Customer");
         String invoiceNumber = invoice.substring(positionStart + 4, positionEnd - 1);
 
-        Invoice newInvoice = new Invoice(Integer.valueOf(invoiceNumber), totalAmount);
+		Invoice newInvoice = new Invoice(Integer.valueOf(invoiceNumber), totalAmountInt);
 
         String cathegoryLine = input[16];
         int euroPosition = cathegoryLine.indexOf("€");
@@ -69,7 +69,7 @@ public class CustomerService {
         if (!newCustomer.getInvoices().contains(newInvoice)){
 			newInvoice.setMortage(mortgage);
             newCustomer.addInvoice(newInvoice);
-            newCustomer.proceedAmount(totalAmountInt);
+			newCustomer.proceedAmount(newInvoice);
         }
 
 		informBank(newCustomer);

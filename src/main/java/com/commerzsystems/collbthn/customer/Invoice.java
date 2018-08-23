@@ -6,15 +6,15 @@ public class Invoice {
 
 	private int invoiceNumber;
 
-	private String amount;
+	private int amount;
 
-	public Invoice(boolean mortage, int invoiceNumber, String amount) {
+	public Invoice(boolean mortage, int invoiceNumber, int amount) {
 		this.setMortage(mortage);
         this.invoiceNumber = invoiceNumber;
         this.amount = amount;
     }
 
-    public Invoice(int invoiceNumber, String amount) {
+	public Invoice(int invoiceNumber, int amount) {
         this.invoiceNumber = invoiceNumber;
         this.amount = amount;
     }
@@ -36,11 +36,11 @@ public class Invoice {
         this.invoiceNumber = invoiceNumber;
     }
 
-    public String getAmount() {
+	public int getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+	public void setAmount(int amount) {
         this.amount = amount;
     }
 

@@ -26,8 +26,10 @@ public class Customer {
 		this.address = address;
 	}
 
-	public void proceedAmount(int lastInvoice) {
-		setTotalAmount(getTotalAmount() + lastInvoice);
+	public void proceedAmount(Invoice newInvoice) {
+		if (newInvoice.isMortage()) {
+			setTotalAmount(getTotalAmount() + newInvoice.getAmount());
+		}
 	}
 
 	@Override
