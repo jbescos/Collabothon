@@ -1,49 +1,50 @@
 package com.commerzsystems.collbthn.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map.Entry;
+import java.io.InputStream;
+import java.net.URL;
 
-import org.junit.Ignore;
+import org.deeplearning4j.models.paragraphvectors.ParagraphVectors;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.commerzsystems.collbthn.utils.FileUtils;
+import com.commerzsystems.collbthn.utils.ZipUtils;
+import com.google.common.io.Files;
+
 
 
 public class TextAnalyzerTest {
 	
-	private final static Logger logger = LoggerFactory.getLogger(TextAnalyzerTest.class);
-	private final static File MODEL;
-
-	static{
-		try {
-			File trainingFile = FileUtils.loadFileFromClasspath("/data/training.txt");
-			MODEL = File.createTempFile("training", ".bin");
-			new TextAnalyzer().trainCategorizer(trainingFile, MODEL);
-		} catch (IOException e) {
-			logger.error("Unexpected error", e);
-			throw new ExceptionInInitializerError(e);
-		}
-	}
+	private final static Logger log = LoggerFactory.getLogger(TextAnalyzerTest.class);
+	private final static String TRAIN_DATA_1 = "/data/labeled.zip";
+	private final URL zipFileURL = getClass().getResource(TRAIN_DATA_1);
+	private final static String SENTENCE = "This is a test example";
 	
 	@Test
-	@Ignore
 	public void categories() throws IOException {
-		TextAnalyzer txt = new TextAnalyzer();
-		Entry<Double, String> result = txt.categorize(MODEL, "Roof Topic");
-		assertEquals("Result: "+result, "mortgage", result.getValue());
-		result = txt.categorize(MODEL, "Malediven June 2018 1 Week");
-		assertEquals("Result: "+result, "no_mortgage", result.getValue());
-		result = txt.categorize(MODEL, "Building Window");
-		assertEquals("Result: "+result, "mortgage", result.getValue());
-		result = txt.categorize(MODEL, "Window Art Luxi");
-		assertEquals("Result: "+result, "mortgage", result.getValue());
-		result = txt.categorize(MODEL, "Window Art Normi");
-		assertEquals("Result: "+result, "mortgage", result.getValue());
+		File unzipped = Files.createTempDir();
+		unzipped.deleteOnExit();
+		try(InputStream inputStream = zipFileURL.openStream()){
+			ZipUtils.unzip(inputStream, unzipped);
+		}
+		ParagraphVectors paragraphVectors = CategorizerModel.createFromFile(unzipped);
+		VectorCategorizer categorizer = new VectorCategorizer(paragraphVectors);
+		String category = categorizer.categorize(SENTENCE);
+		log.info("Category: {}", category);
+		assertNotNull(category);
+		File model = File.createTempFile("model", ".zip");
+		model.deleteOnExit();
+		CategorizerModel.saveModel(model, paragraphVectors);
+		paragraphVectors = CategorizerModel.loadModel(model);
+		categorizer = new VectorCategorizer(paragraphVectors);
+		String category2 = categorizer.categorize(SENTENCE);
+		log.info("Category2: {}", category);
+		assertEquals(category, category2);
 		
 	}
 	
