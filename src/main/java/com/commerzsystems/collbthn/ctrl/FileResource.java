@@ -10,6 +10,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.commerzsystems.collbthn.parser.CustomerService;
-import com.commerzsystems.collbthn.parser.TextParser;
 
 @RestController
 @RequestMapping("/files")
@@ -25,7 +25,12 @@ public class FileResource {
 
 	private final Logger logger = LoggerFactory.getLogger(FileResource.class);
 
-	private TextParser textParser = new TextParser();
+	private final CustomerService cs;
+	
+	@Autowired
+	public FileResource(CustomerService cs) {
+		this.cs = cs;
+	}
 
 	@PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path) throws Exception {
@@ -34,7 +39,7 @@ public class FileResource {
 
 		PDDocument document = PDDocument.load(file);
 
-		System.out.println("PDF loaded");
+		logger.debug("PDF loaded");
 
 		//Adding a blank page to the document
 		document.addPage(new PDPage());
@@ -43,8 +48,6 @@ public class FileResource {
 
 		String str = ts.getText(document);
 		//Closing the document
-
-		CustomerService cs = new CustomerService();
 
         //textParser.parse(str);
 
@@ -63,7 +66,7 @@ public class FileResource {
 			convFile.createNewFile();
 			fos = new FileOutputStream(convFile);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Error", e);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -80,7 +83,8 @@ public class FileResource {
 
 	@PostMapping("/bankview")
 	public String getCustomer(@RequestParam("name") String name) {
-		int integer = textParser.getCustomerEntry(name);
+		// FIXME
+//		int integer = textParser.getCustomerEntry(name);
 
 		return name;
 	}

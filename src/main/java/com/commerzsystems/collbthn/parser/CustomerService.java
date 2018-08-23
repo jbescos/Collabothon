@@ -9,13 +9,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.stereotype.Service;
+
 import com.commerzsystems.collbthn.customer.Customer;
 import com.commerzsystems.collbthn.customer.Invoice;
 
+@Service
 public class CustomerService {
 
-    private final static AtomicInteger idCounter = new AtomicInteger(0);
-    private final static Map<Integer, Customer> idMap = new ConcurrentHashMap<>();
+    private final AtomicInteger idCounter = new AtomicInteger(0);
+    private final Map<Integer, Customer> idMap = new ConcurrentHashMap<>();
 
     public void parse(String input) throws Exception {
         String[] lines = input.split("\r\n|\r|\n");
