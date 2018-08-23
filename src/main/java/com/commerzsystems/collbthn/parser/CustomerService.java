@@ -114,6 +114,10 @@ public class CustomerService {
 	public Customer getCustomer(String name) {
 		return idMap.get(name);
 	}
+	
+	public Map<Integer, Customer> getCustomers(){
+		return idMap;
+	}
 
     public static <T, E> int getKeyByValue(Map<T, E> map, E value) {
         Set<T> keys = new HashSet<T>();
