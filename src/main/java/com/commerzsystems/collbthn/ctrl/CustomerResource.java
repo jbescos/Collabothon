@@ -32,7 +32,7 @@ public class CustomerResource {
 	}
 	
 	@RequestMapping(path = "/invoices", method = RequestMethod.GET)
-	public ResponseEntity<List<Invoice>> list(@RequestParam(value="invoices", required=true) int id) throws IOException {
+	public ResponseEntity<List<Invoice>> list(@RequestParam(value="id", required=true) int id) throws IOException {
 		return ResponseEntity.ok(cs.getCustomers().get(id).getInvoices());
 	}
 	
