@@ -36,9 +36,6 @@ public class FileResource {
 		//Adding a blank page to the document
 		document.addPage(new PDPage());
 
-		//Saving the document
-		document.save("C:/sample.pdf");
-
 		PDFTextStripper ts = new PDFTextStripper();
 
 		String str = ts.getText(document);

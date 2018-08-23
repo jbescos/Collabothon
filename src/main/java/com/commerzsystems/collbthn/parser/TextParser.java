@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TextParser {
 
-    private final String TEMP_DIR = "D:/";
+    private final String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
     private final static AtomicInteger idCounter = new AtomicInteger(0);
     private static HashMap<String, Integer> idMap = new HashMap<>();
