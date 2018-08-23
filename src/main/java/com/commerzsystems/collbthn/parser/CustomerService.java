@@ -58,7 +58,7 @@ public class CustomerService {
 		String totalAmount = "0.00";
 		for (String string : input) {
 			if (string.contains("€")) {
-				totalAmount = string.substring(0, input[22].length() - 3);
+				totalAmount = string.substring(0, string.length() - 3);
 			}
 		}
 
