@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.commerzsystems.collbthn.parser.CustomerService;
 import com.commerzsystems.collbthn.parser.TextParser;
 
 @RestController
@@ -25,7 +26,7 @@ public class FileResource {
 	private final Logger logger = LoggerFactory.getLogger(FileResource.class);
 
 	@PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path) throws IOException {
+    public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path) throws Exception {
 
 		File file = convert(multiPartFile);
 
@@ -36,6 +37,9 @@ public class FileResource {
 		//Adding a blank page to the document
 		document.addPage(new PDPage());
 
+		//Saving the document
+		document.save("C:/sample.pdf");
+
 		PDFTextStripper ts = new PDFTextStripper();
 
 		String str = ts.getText(document);
@@ -43,7 +47,11 @@ public class FileResource {
 
         TextParser textParser = new TextParser();
 
-        textParser.parse(str);
+		CustomerService cs = new CustomerService();
+
+        //textParser.parse(str);
+
+		cs.parse(str);
 
 		document.close();
 
