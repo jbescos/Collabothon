@@ -230,7 +230,7 @@
 				<div class="col-md-12">
 					<div class="card">
 						<div class="card-body">
-							<table class="table table-striped table-bordered">
+							<table class="table table-striped table-bordered" id="invoices">
 								<thead>
 									<tr>
 										<th>Invoice ID</th>
@@ -240,26 +240,9 @@
 									</tr>
 								</thead>
 								<tbody>
+									
 									<tr>
-										<td>984928</td>
-										<td><span class="badge badge-success">YES</span></td>
-										<td class="text-right">€32,000</td>
-										<td><button type="button" class="btn btn-primary btn-sm">View</button></td>
-									</tr>
-									<tr>
-										<td>849389</td>
-										<td><span class="badge badge-danger">NO</span></td>
-										<td class="text-right">€17,000</td>
-										<td><button type="button" class="btn btn-primary btn-sm">View</button></td>
-									</tr>
-									<tr>
-										<td>234094</td>
-										<td><span class="badge badge-success">YES</span></td>
-										<td class="text-right">€86,000</td>
-										<td><button type="button" class="btn btn-primary btn-sm">View</button></td>
-									</tr>
-									<tr>
-										<td colspan="3" class="text-right">€135,000</td>
+										<td colspan="3" class="text-right"><a id="total"></a></td>
 										<td>
 											<button type="button" class="btn btn-success btn-sm">Approve</button>
 											<button type="button" class="btn btn-danger btn-sm">Dispute</button>
@@ -317,7 +300,20 @@
                     $("#users").append(li);
                     $("#"+key).on('click', function() {
                         $.ajax({url : '/customer/invoices', type : 'GET', contentType : 'application/json', data : { id : key } }).done(function(invoices) {
-                            alert('Clicked '+key);
+// <tr><td>984928</td><td><span class="badge badge-success">YES</span></td><td class="text-right">€32,000</td><td><button type="button" class="btn btn-primary btn-sm">View</button></td></tr>                            
+                        	var total=0;
+                        	invoices.forEach(function(invoice) {
+                        		total=total+invoice.amount;
+                        		var success;
+                        		if(invoice.mortage == true){
+                        			success="badge badge-success";
+                        		}else{
+                        			success="badge badge-danger";
+                        		}
+            					var tr=$('<tr><td>'+invoice.invoiceNumber+'</td><td><span class=\"'+success+'\">'+invoice.mortage+'</span></td><td class="text-right">€'+invoice.amount+'</td><td><button type="button" class="btn btn-primary btn-sm">View</button></td></tr>');
+            					$("#invoices").prepend(tr);
+                        	});
+                        	$("#total").text("€"+total);
                         })
                     });
                 })
