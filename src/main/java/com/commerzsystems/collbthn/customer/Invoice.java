@@ -7,6 +7,8 @@ public class Invoice {
 	private int invoiceNumber;
 
 	private int amount;
+	
+	private String cathegory;
 
 	public Invoice(boolean mortage, int invoiceNumber, int amount) {
 		this.setMortage(mortage);
@@ -14,9 +16,10 @@ public class Invoice {
         this.amount = amount;
     }
 
-	public Invoice(int invoiceNumber, int amount) {
+	public Invoice(int invoiceNumber, int amount, String cathegory) {
         this.invoiceNumber = invoiceNumber;
         this.amount = amount;
+        this.cathegory = cathegory;
     }
 
     @Override
@@ -54,6 +57,14 @@ public class Invoice {
 
 	public void setMortage(boolean mortage) {
 		this.mortage = mortage;
+	}
+
+	public String getCathegory() {
+		return cathegory;
+	}
+
+	public void setCathegory(String cathegory) {
+		this.cathegory = cathegory;
 	}
 
 }

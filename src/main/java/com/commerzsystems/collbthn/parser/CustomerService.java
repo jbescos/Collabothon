@@ -69,12 +69,11 @@ public class CustomerService {
         int positionEnd = invoice.indexOf("Customer");
         String invoiceNumber = invoice.substring(positionStart + 4, positionEnd - 1);
 
-		Invoice newInvoice = new Invoice(Integer.valueOf(invoiceNumber), totalAmountInt);
-
         String cathegoryLine = input[16];
         int euroPosition = cathegoryLine.indexOf("€");
         String cathegoryLineUntilEuroSign = cathegoryLine.substring(0, euroPosition - 2);
         String cathegory = cathegoryLineUntilEuroSign.substring(2, cathegoryLineUntilEuroSign.lastIndexOf(" "));
+        Invoice newInvoice = new Invoice(Integer.valueOf(invoiceNumber), totalAmountInt, cathegory);
         /////////////////////////////////////////////////////////////////
 		cathegory = cathegorizer.categorize(cathegory);
         //insert the method here to DEFINE THE CATHEGORY HERE
