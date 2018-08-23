@@ -29,12 +29,12 @@ public class CustomerService {
     	this.cathegorizer = cathegorizer;
     }
 
-	public boolean parse(String input) throws Exception {
+	public Customer parse(String input) throws Exception {
         String[] lines = input.split("\r\n|\r|\n");
 		return processInfoAboutCustomer(lines);
     }
 
-	private boolean processInfoAboutCustomer(String[] input) throws Exception {
+	private Customer processInfoAboutCustomer(String[] input) throws Exception {
 
         String name = input[3];
         String address = input[4];
@@ -55,7 +55,12 @@ public class CustomerService {
 
 
         //invoice info
-        String totalAmount = input[22].substring(0, input[22].length() -3);
+		String totalAmount = "0.00";
+		for (String string : input) {
+			if (string.contains("€")) {
+				totalAmount = string.substring(0, input[22].length() - 3);
+			}
+		}
 
         int totalAmountInt = currencyToBigDecimalFormat(totalAmount);
 
@@ -83,15 +88,15 @@ public class CustomerService {
 
 		informBank(newCustomer);
 
-		return mortgage;
+		return newCustomer;
 
     }
 
-	private boolean informBank(Customer newCustomer) {
+	private void informBank(Customer newCustomer) {
 		if ((callTresholdForCustomer(newCustomer.getId()) - newCustomer.getTotalAmount()) <= 0) {
-			return true;
+			newCustomer.setUpfrontFeeExceeded(true);
 		}
-		return false;
+		newCustomer.setUpfrontFeeExceeded(false);
 
 	}
 

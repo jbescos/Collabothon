@@ -34,7 +34,7 @@ public class FileResource {
 	}
 
 	@PostMapping("/upload")
-	public boolean handleFileUpload(@RequestParam("file") MultipartFile multiPartFile,
+	public Customer handleFileUpload(@RequestParam("file") MultipartFile multiPartFile,
 			@RequestParam("path") String path) throws Exception {
 
 		File file = convert(multiPartFile);
@@ -51,11 +51,11 @@ public class FileResource {
 		String str = ts.getText(document);
 		//Closing the document
 
-		boolean mortage = cs.parse(str);
+		Customer customer = cs.parse(str);
 
 		document.close();
 
-		return mortage;
+		return customer;
     }
 
 	private File convert(MultipartFile file) throws IOException {
