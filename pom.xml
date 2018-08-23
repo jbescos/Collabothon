@@ -24,6 +24,7 @@
 		<maven.compiler.target>8</maven.compiler.target>
 		<slf4j-version>1.7.25</slf4j-version>
 		<opennlp.version>1.9.0</opennlp.version>
+		<dl4j.version>1.0.0-beta2</dl4j.version>
 		<poi.version>2.0.11</poi.version>
 	</properties>
 
@@ -48,14 +49,19 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.opennlp</groupId>
-			<artifactId>opennlp-tools</artifactId>
-			<version>${opennlp.version}</version>
+			<groupId>org.deeplearning4j</groupId>
+			<artifactId>deeplearning4j-core</artifactId>
+			<version>${dl4j.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.opennlp</groupId>
-			<artifactId>opennlp-uima</artifactId>
-			<version>${opennlp.version}</version>
+			<groupId>org.nd4j</groupId>
+			<artifactId>nd4j-native-platform</artifactId>
+			<version>${dl4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.deeplearning4j</groupId>
+			<artifactId>deeplearning4j-nlp</artifactId>
+			<version>${dl4j.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
