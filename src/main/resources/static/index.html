@@ -234,6 +234,7 @@
 								<thead>
 									<tr>
 										<th>Invoice ID</th>
+										<th>Category</th>
 										<th>Mortgage</th>
 										<th>Amount</th>
 										<th>Source</th>
@@ -242,7 +243,7 @@
 								<tbody>
 									
 									<tr>
-										<td colspan="3" class="text-right"><a id="total"></a></td>
+										<td colspan="4" class="text-right"><a id="total"></a></td>
 										<td>
 											<button type="button" class="btn btn-success btn-sm">Approve</button>
 											<button type="button" class="btn btn-danger btn-sm">Dispute</button>
@@ -310,7 +311,7 @@
                         		}else{
                         			success="badge badge-danger";
                         		}
-            					var tr=$('<tr><td>'+invoice.invoiceNumber+'</td><td><span class=\"'+success+'\">'+invoice.mortage+'</span></td><td class="text-right">€'+invoice.amount+'</td><td><button type="button" class="btn btn-primary btn-sm">View</button></td></tr>');
+            					var tr=$('<tr><td>'+invoice.invoiceNumber+'</td><td class="text-right">'+invoice.cathegory+'</td><td><span class=\"'+success+'\">'+invoice.mortage+'</span></td><td class="text-right">€'+invoice.amount+'</td><td><button type="button" class="btn btn-primary btn-sm">View</button></td></tr>');
             					$("#invoices").prepend(tr);
                         	});
                         	$("#total").text("€"+total);
