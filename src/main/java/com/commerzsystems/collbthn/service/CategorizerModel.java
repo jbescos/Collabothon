@@ -24,8 +24,8 @@ public class CategorizerModel {
 		TokenizerFactory tokenizerFactory = new DefaultTokenizerFactory();
 		tokenizerFactory.setTokenPreProcessor(new CommonPreprocessor());
 
-		ParagraphVectors paragraphVectors = new ParagraphVectors.Builder().learningRate(0.025).minLearningRate(0.01).batchSize(500)
-				.epochs(10).iterate(iterator).trainWordVectors(true).tokenizerFactory(tokenizerFactory).build();
+		ParagraphVectors paragraphVectors = new ParagraphVectors.Builder().learningRate(0.05).minLearningRate(0.01).batchSize(10)
+				.epochs(1).iterate(iterator).trainWordVectors(true).tokenizerFactory(tokenizerFactory).build();
 		paragraphVectors.fit();
 		printLabels(paragraphVectors);
 		return paragraphVectors;
