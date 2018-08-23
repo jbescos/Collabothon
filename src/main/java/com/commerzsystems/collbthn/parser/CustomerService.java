@@ -9,17 +9,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.commerzsystems.collbthn.customer.Customer;
 import com.commerzsystems.collbthn.customer.Invoice;
+import com.commerzsystems.collbthn.service.CategorizerModel;
 import com.commerzsystems.collbthn.service.ICathegorizer;
 import com.commerzsystems.collbthn.service.MockCathegorizer;
 
 @Service
 public class CustomerService {
 
+	private final static Logger log = LoggerFactory.getLogger(CustomerService.class);
     private final AtomicInteger idCounter = new AtomicInteger(0);
     private final Map<Integer, Customer> idMap = new ConcurrentHashMap<>();
     private final ICathegorizer cathegorizer;
@@ -46,9 +50,11 @@ public class CustomerService {
             userIdToProcess = idCounter.incrementAndGet();
             newCustomer = new Customer(userIdToProcess, name, address);
             idMap.put(userIdToProcess, newCustomer);
+            log.info("New customer {}", newCustomer);
         } else {
             userIdToProcess = getKeyByValue(idMap, new Customer(name, address));
             newCustomer = idMap.get(userIdToProcess);
+            log.info("Existing customer {}", newCustomer);
         }
 
         /////////////////////////////////////////////////////////////////
