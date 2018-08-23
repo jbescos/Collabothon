@@ -61,25 +61,27 @@ public class GiniService {
 	public String loginToGini() {
 		// createGiniUser(getClientToken());
 
-		RestTemplate restTemplate = new RestTemplate();
-		final String uri = "https://user.gini.net/api/users";
-
-		String data = "username=nopaperworkers@collabothon.de&password=papersecret1";
-
-		// encode password and username
-		String userpass = "collabothon_XX:<client_password>";
-		String encoding = Base64.encodeBase64String(userpass.getBytes());
-
-		// set headers
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		List<MediaType> array = new ArrayList<>();
-		array.add(MediaType.APPLICATION_JSON);
-		headers.setAccept(array);
-		headers.set("Authorization", "Basic " + encoding);
-		HttpEntity<String> entity = new HttpEntity<>(data, headers);
-
-		ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
+		// RestTemplate restTemplate = new RestTemplate();
+		// final String uri = "https://user.gini.net/api/users";
+		//
+		// String data =
+		// "username=nopaperworkers@collabothon.de&password=papersecret1";
+		//
+		// // encode password and username
+		// String userpass = "collabothon_XX:<client_password>";
+		// String encoding = Base64.encodeBase64String(userpass.getBytes());
+		//
+		// // set headers
+		// HttpHeaders headers = new HttpHeaders();
+		// headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		// List<MediaType> array = new ArrayList<>();
+		// array.add(MediaType.APPLICATION_JSON);
+		// headers.setAccept(array);
+		// headers.set("Authorization", "Basic " + encoding);
+		// HttpEntity<String> entity = new HttpEntity<>(data, headers);
+		//
+		// ResponseEntity<String> result = restTemplate.exchange(uri,
+		// HttpMethod.POST, entity, String.class);
 
 		return getClientToken();
 	}

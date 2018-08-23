@@ -25,6 +25,8 @@ public class FileResource {
 
 	private final Logger logger = LoggerFactory.getLogger(FileResource.class);
 
+	private TextParser textParser = new TextParser();
+
 	@PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path) throws Exception {
 
@@ -37,15 +39,10 @@ public class FileResource {
 		//Adding a blank page to the document
 		document.addPage(new PDPage());
 
-		//Saving the document
-		document.save("C:/sample.pdf");
-
 		PDFTextStripper ts = new PDFTextStripper();
 
 		String str = ts.getText(document);
 		//Closing the document
-
-        TextParser textParser = new TextParser();
 
 		CustomerService cs = new CustomerService();
 
@@ -80,4 +77,12 @@ public class FileResource {
 		return "Hello World!";
 	}
 	
+
+	@PostMapping("/bankview")
+	public String getCustomer(@RequestParam("name") String name) {
+		int integer = textParser.getCustomerEntry(name);
+
+		return name;
+	}
+
 }

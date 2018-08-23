@@ -7,7 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TextParser {
@@ -15,7 +16,7 @@ public class TextParser {
     private final String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
     private final static AtomicInteger idCounter = new AtomicInteger(0);
-    private static HashMap<String, Integer> idMap = new HashMap<>();
+	private static final Map<String, Integer> idMap = new ConcurrentHashMap<>();
 
     public void parse(String input) {
 
@@ -72,6 +73,10 @@ public class TextParser {
             return idMap.get(name);
         }
     }
+
+	public Integer getCustomerEntry(String name) {
+		return idMap.get(name);
+	}
 
     //create a folder for a customer
     private void createFolder(int id) {
