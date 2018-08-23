@@ -75,7 +75,7 @@ public class FileResource {
 
 	@PostMapping("/bankview")
 	public String getCustomer(@RequestParam("name") String name) {
-		textParser.getCustomerEntry(name);
+		int integer = textParser.getCustomerEntry(name);
 
 		return name;
 	}
