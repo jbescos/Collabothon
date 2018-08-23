@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.commerzsystems.collbthn.parser.TextParser;
+
 @RestController
 @RequestMapping("/files")
 public class FileResource {
@@ -23,8 +25,7 @@ public class FileResource {
 	private final Logger logger = LoggerFactory.getLogger(FileResource.class);
 
 	@PostMapping("/upload")
-	public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path)
-			throws IOException {
+    public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path) throws IOException {
 
 		File file = convert(multiPartFile);
 
@@ -32,21 +33,25 @@ public class FileResource {
 
 		System.out.println("PDF loaded");
 
-		// Adding a blank page to the document
+		//Adding a blank page to the document
 		document.addPage(new PDPage());
 
-		// Saving the document
+		//Saving the document
 		document.save("C:/sample.pdf");
 
 		PDFTextStripper ts = new PDFTextStripper();
 
 		String str = ts.getText(document);
+		//Closing the document
 
-		// Closing the document
+        TextParser textParser = new TextParser();
+
+        textParser.parse(str);
+
 		document.close();
 
 		return null;
-	}
+    }
 
 	private File convert(MultipartFile file) throws IOException {
 		File convFile = null;
@@ -56,9 +61,9 @@ public class FileResource {
 			convFile.createNewFile();
 			fos = new FileOutputStream(convFile);
 		} catch (FileNotFoundException e) {
-			logger.error("Error", e);
+			e.printStackTrace();
 		} catch (IOException e) {
-			logger.error("Error", e);
+			e.printStackTrace();
 		}
 		fos.write(file.getBytes());
 		fos.close();
@@ -69,5 +74,5 @@ public class FileResource {
 	String home() {
 		return "Hello World!";
 	}
-
+	
 }
