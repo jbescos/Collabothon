@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -62,6 +63,30 @@ public class ZipUtils {
 					}
 				}
 			}
+		}
+	}
+
+	public static List<File> unzipToFileArray(InputStream zip, List<File> list) throws ZipException, IOException {
+		byte[] buffer = new byte[BUFFER];
+		try (ZipInputStream zis = new ZipInputStream(zip)) {
+			ZipEntry entry;
+			while ((entry = zis.getNextEntry()) != null) {
+				String fileName = entry.getName();
+				File newFile = new File(fileName);
+				if (entry.isDirectory()) {
+					newFile.mkdirs();
+				} else {
+					log.debug("File unzip: {}", newFile.getAbsoluteFile());
+					try (FileOutputStream fos = new FileOutputStream(newFile)) {
+						int len;
+						while ((len = zis.read(buffer)) > 0) {
+							fos.write(buffer, 0, len);
+						}
+						list.add(newFile);
+					}
+				}
+			}
+			return list;
 		}
 	}
 

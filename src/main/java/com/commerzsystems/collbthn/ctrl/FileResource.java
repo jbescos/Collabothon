@@ -4,9 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.commerzsystems.collbthn.customer.Customer;
 import com.commerzsystems.collbthn.parser.CustomerService;
+import com.commerzsystems.collbthn.utils.ZipUtils;
 
 @RestController
 @RequestMapping("/files")
@@ -37,23 +39,25 @@ public class FileResource {
 	public Customer handleFileUpload(@RequestParam("file") MultipartFile multiPartFile,
 			@RequestParam("path") String path) throws Exception {
 
-		File file = convert(multiPartFile);
+		List<File> fileList = new ArrayList<File>();
+		File file = null;
 
-		PDDocument document = PDDocument.load(file);
+		// need an array of files
+		if (multiPartFile.getOriginalFilename().contains(".zip")) {
+			ZipUtils.unzipToFileArray(multiPartFile.getInputStream(), fileList);
+		} else {
+			file = convert(multiPartFile);
+			fileList.add(file);
+		}
 
-		logger.debug("PDF loaded");
-
-		//Adding a blank page to the document
-		document.addPage(new PDPage());
-
-		PDFTextStripper ts = new PDFTextStripper();
-
-		String str = ts.getText(document);
-		//Closing the document
-
-		Customer customer = cs.parse(str);
-
-		document.close();
+		Customer customer = null;
+		for (File fileElem : fileList) {
+			PDDocument document = PDDocument.load(fileElem);
+			PDFTextStripper ts = new PDFTextStripper();
+			String str = ts.getText(document);
+			customer = cs.parse(str);
+			document.close();
+		}
 
 		return customer;
     }
