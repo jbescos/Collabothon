@@ -43,6 +43,13 @@ public class Customer {
 		return false;
 	}
 
+
+	@Override
+	public String toString() {
+		return "Customer [invoices=" + invoices.toString() + ", id=" + id + ", name=" + name + ", address=" + address
+				+ ", totalAmount=" + totalAmount + ", upfrontFeeExceeded=" + upfrontFeeExceeded + "]";
+	}
+
 	public List<Invoice> getInvoices() {
 		return invoices;
 	}

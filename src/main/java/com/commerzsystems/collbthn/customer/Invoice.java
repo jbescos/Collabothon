@@ -31,7 +31,13 @@ public class Invoice {
         return false;
     }
 
-    public int getInvoiceNumber() {
+	@Override
+	public String toString() {
+		return "Invoice [mortage=" + mortage + ", invoiceNumber=" + invoiceNumber + ", amount=" + amount
+				+ ", cathegory=" + cathegory + "]";
+	}
+
+	public int getInvoiceNumber() {
         return invoiceNumber;
     }
 

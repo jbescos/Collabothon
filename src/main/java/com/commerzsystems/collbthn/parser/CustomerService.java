@@ -143,28 +143,18 @@ public class CustomerService {
 
     public static int currencyToBigDecimalFormat(String currency) throws Exception {
 
-        if(!doesMatch(currency,"^[+-]?[0-9]{1,3}(?:[0-9]*(?:[.,][0-9]{0,2})?|(?:,[0-9]{3})*(?:\\.[0-9]{0,2})?|(?:\\.[0-9]{3})*(?:,[0-9]{0,2})?)$"))
-            throw new Exception("Currency in wrong format " + currency);
+		// Replace all dots with commas
+		if (currency.contains(".")) {
+			currency = currency.replaceAll("\\.", "");
+		}
 
-        // Replace all dots with commas
-        currency = currency.replaceAll("\\.", ",");
+		// Remove all commas
+		if (currency.contains(",")) {
+			currency = currency.substring(0, currency.indexOf(","));
+		}
+		return Integer.parseInt(currency);
+	}
 
-        // If fractions exist, the separator must be a .
-        if(currency.length()>=3) {
-            char[] chars = currency.toCharArray();
-            if(chars[chars.length-2] == ',') {
-                chars[chars.length-2] = '.';
-            } else if(chars[chars.length-3] == ',') {
-                chars[chars.length-3] = '.';
-            }
-            currency = new String(chars);
-        }
-
-        // Remove all commas
-        currency = currency.replaceAll(",", "");
-        currency = currency.substring(0, currency.indexOf("."));
-        return Integer.parseInt(currency);
-    }
 
     public static boolean doesMatch(String s, String pattern) {
         try {

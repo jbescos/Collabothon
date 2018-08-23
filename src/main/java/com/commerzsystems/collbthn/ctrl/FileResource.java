@@ -55,7 +55,9 @@ public class FileResource {
 			PDDocument document = PDDocument.load(fileElem);
 			PDFTextStripper ts = new PDFTextStripper();
 			String str = ts.getText(document);
+			logger.debug("customer before new file:" + customer.toString());
 			customer = cs.parse(str);
+			logger.debug("customer after new file:" + customer.toString());
 			document.close();
 		}
 
