@@ -102,10 +102,4 @@ public class Customer {
 		this.upfrontFeeExceeded = upfrontFeeExceeded;
 	}
 
-	@Override
-	public String toString() {
-		return "Customer [invoices=" + invoices + ", id=" + id + ", name=" + name + ", address=" + address
-				+ ", totalAmount=" + totalAmount + ", upfrontFeeExceeded=" + upfrontFeeExceeded + "]";
-	}
-
 }
