@@ -2,8 +2,14 @@ package com.commerzsystems.collbthn.customer;
 
 public class Invoice {
 
-    public Invoice(String cathegory, int invoiceNumber, String amount) {
-        this.cathegory = cathegory;
+	private boolean mortage;
+
+	private int invoiceNumber;
+
+	private String amount;
+
+	public Invoice(boolean mortage, int invoiceNumber, String amount) {
+		this.setMortage(mortage);
         this.invoiceNumber = invoiceNumber;
         this.amount = amount;
     }
@@ -21,12 +27,6 @@ public class Invoice {
         }
         return false;
     }
-
-    private String cathegory;
-
-    private int invoiceNumber;
-
-    private String amount;
 
     public int getInvoiceNumber() {
         return invoiceNumber;
@@ -47,5 +47,13 @@ public class Invoice {
     public void getMoneyInteger() {
 
     }
+
+	public boolean isMortage() {
+		return mortage;
+	}
+
+	public void setMortage(boolean mortage) {
+		this.mortage = mortage;
+	}
 
 }

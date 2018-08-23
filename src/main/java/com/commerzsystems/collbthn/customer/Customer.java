@@ -5,75 +5,82 @@ import java.util.List;
 
 public class Customer {
 
-    public Customer(int id, String name, String address) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-    }
+	private List<Invoice> invoices = new ArrayList<>();
 
-    public Customer(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
+	private int id;
 
-    private int totalAmount = 0;
+	private String name;
 
-    public void proceedAmount(int lastInvoice) {
-        totalAmount += lastInvoice;
-    }
+	private String address;
 
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof Customer) {
-            Customer customer = (Customer) obj;
-            return this.getName().equals(customer.getName()) && this.getAddress().equals(customer.getAddress());
-        }
-        return false;
-    }
+	private int totalAmount = 0;
 
-    private List<Invoice> invoices = new ArrayList<>();
+	public Customer(int id, String name, String address) {
+		this.id = id;
+		this.name = name;
+		this.address = address;
+	}
 
-    private int id;
+	public Customer(String name, String address) {
+		this.name = name;
+		this.address = address;
+	}
 
-    private String name;
+	public void proceedAmount(int lastInvoice) {
+		setTotalAmount(getTotalAmount() + lastInvoice);
+	}
 
-    private String address;
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Customer) {
+			Customer customer = (Customer) obj;
+			return this.getName().equals(customer.getName()) && this.getAddress().equals(customer.getAddress());
+		}
+		return false;
+	}
 
-    public List<Invoice> getInvoices() {
-        return invoices;
-    }
+	public List<Invoice> getInvoices() {
+		return invoices;
+	}
 
-    public void addInvoice(Invoice invoice) {
-        invoices.add(invoice);
-    }
+	public void addInvoice(Invoice invoice) {
+		invoices.add(invoice);
+	}
 
-    public void setInvoices(List<Invoice> invoices) {
-        this.invoices = invoices;
-    }
+	public void setInvoices(List<Invoice> invoices) {
+		this.invoices = invoices;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
+	public int getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(int totalAmount) {
+		this.totalAmount = totalAmount;
+	}
 
 }

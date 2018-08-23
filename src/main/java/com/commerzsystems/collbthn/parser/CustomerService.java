@@ -20,9 +20,9 @@ public class CustomerService {
     private final AtomicInteger idCounter = new AtomicInteger(0);
     private final Map<Integer, Customer> idMap = new ConcurrentHashMap<>();
 
-    public void parse(String input) throws Exception {
+	public boolean parse(String input) throws Exception {
         String[] lines = input.split("\r\n|\r|\n");
-        processInfoAboutCustomer(lines);
+		return processInfoAboutCustomer(lines);
     }
 
 	private boolean processInfoAboutCustomer(String[] input) throws Exception {
@@ -67,13 +67,39 @@ public class CustomerService {
         boolean mortgage = false;
 
         if (!newCustomer.getInvoices().contains(newInvoice)){
+			newInvoice.setMortage(mortgage);
             newCustomer.addInvoice(newInvoice);
             newCustomer.proceedAmount(totalAmountInt);
         }
 
+		informBank(newCustomer);
+
 		return mortgage;
 
     }
+
+	private boolean informBank(Customer newCustomer) {
+		if ((callTresholdForCustomer(newCustomer.getId()) - newCustomer.getTotalAmount()) <= 0) {
+			return true;
+		}
+		return false;
+
+	}
+
+	private int callTresholdForCustomer(int id) {
+		if (id == 0 && id == 1) {
+			return 2000;
+		}
+		if (id == 2) {
+			return 100000;
+		}
+		return 0;
+
+	}
+
+	public Customer getCustomer(String name) {
+		return idMap.get(name);
+	}
 
     public static <T, E> int getKeyByValue(Map<T, E> map, E value) {
         Set<T> keys = new HashSet<T>();

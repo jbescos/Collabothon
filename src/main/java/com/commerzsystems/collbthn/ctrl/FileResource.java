@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.commerzsystems.collbthn.customer.Customer;
 import com.commerzsystems.collbthn.parser.CustomerService;
 
 @RestController
@@ -81,11 +82,8 @@ public class FileResource {
 	
 
 	@PostMapping("/bankview")
-	public String getCustomer(@RequestParam("name") String name) {
-		// FIXME
-//		int integer = textParser.getCustomerEntry(name);
-
-		return name;
+	public Customer getCustomer(@RequestParam("name") String name) {
+		return cs.getCustomer(name);
 	}
 
 }
