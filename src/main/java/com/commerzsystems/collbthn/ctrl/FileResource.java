@@ -28,7 +28,8 @@ public class FileResource {
 	private TextParser textParser = new TextParser();
 
 	@PostMapping("/upload")
-    public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path) throws Exception {
+	public boolean handleFileUpload(@RequestParam("file") MultipartFile multiPartFile,
+			@RequestParam("path") String path) throws Exception {
 
 		File file = convert(multiPartFile);
 
@@ -46,13 +47,11 @@ public class FileResource {
 
 		CustomerService cs = new CustomerService();
 
-        //textParser.parse(str);
-
-		cs.parse(str);
+		boolean mortage = cs.parse(str);
 
 		document.close();
 
-		return null;
+		return mortage;
     }
 
 	private File convert(MultipartFile file) throws IOException {

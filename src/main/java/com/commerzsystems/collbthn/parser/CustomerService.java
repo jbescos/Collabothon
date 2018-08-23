@@ -22,7 +22,7 @@ public class CustomerService {
         processInfoAboutCustomer(lines);
     }
 
-    private void processInfoAboutCustomer(String[] input) throws Exception {
+	private boolean processInfoAboutCustomer(String[] input) throws Exception {
 
         String name = input[3];
         String address = input[4];
@@ -47,8 +47,6 @@ public class CustomerService {
 
         int totalAmountInt = currencyToBigDecimalFormat(totalAmount);
 
-
-
         String invoice = input[14];
         int positionStart = invoice.indexOf("Nr.");
         int positionEnd = invoice.indexOf("Customer");
@@ -69,6 +67,8 @@ public class CustomerService {
             newCustomer.addInvoice(newInvoice);
             newCustomer.proceedAmount(totalAmountInt);
         }
+
+		return mortgage;
 
     }
 
