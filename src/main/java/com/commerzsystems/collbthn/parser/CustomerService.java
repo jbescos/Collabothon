@@ -9,16 +9,25 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.commerzsystems.collbthn.customer.Customer;
 import com.commerzsystems.collbthn.customer.Invoice;
+import com.commerzsystems.collbthn.service.ICathegorizer;
+import com.commerzsystems.collbthn.service.MockCathegorizer;
 
 @Service
 public class CustomerService {
 
     private final AtomicInteger idCounter = new AtomicInteger(0);
     private final Map<Integer, Customer> idMap = new ConcurrentHashMap<>();
+    private final ICathegorizer cathegorizer;
+    
+    @Autowired
+    public CustomerService(MockCathegorizer cathegorizer) {
+    	this.cathegorizer = cathegorizer;
+    }
 
 	public boolean parse(String input) throws Exception {
         String[] lines = input.split("\r\n|\r|\n");
@@ -62,9 +71,9 @@ public class CustomerService {
         String cathegoryLineUntilEuroSign = cathegoryLine.substring(0, euroPosition - 2);
         String cathegory = cathegoryLineUntilEuroSign.substring(2, cathegoryLineUntilEuroSign.lastIndexOf(" "));
         /////////////////////////////////////////////////////////////////
-
+		cathegory = cathegorizer.categorize(cathegory);
         //insert the method here to DEFINE THE CATHEGORY HERE
-        boolean mortgage = false;
+        boolean mortgage = cathegory.equals("mortgage");
 
         if (!newCustomer.getInvoices().contains(newInvoice)){
 			newInvoice.setMortage(mortgage);
