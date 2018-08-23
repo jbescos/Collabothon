@@ -242,13 +242,7 @@
 								</thead>
 								<tbody>
 									
-									<tr>
-										<td colspan="4" class="text-right"><a id="total"></a></td>
-										<td>
-											<button type="button" class="btn btn-success btn-sm">Approve</button>
-											<button type="button" class="btn btn-danger btn-sm">Dispute</button>
-										</td>
-									</tr>
+									
 								</tbody>
 							</table>
 						</div>
@@ -298,15 +292,17 @@
             $.ajax({url : '/customer/list', type : 'GET', contentType : 'application/json', data : {}}).done(function(data) {
                 $.each(data, function (key, value) {
                     var li = $('<li id='+key+'><i class="fa fa-id-card-o"></i><a href="#">'+value.name+'</a></li>').attr('expanded', '0');
+                    $("#users").empty();
                     $("#users").append(li);
                     $("#"+key).on('click', function() {
                         $.ajax({url : '/customer/invoices', type : 'GET', contentType : 'application/json', data : { id : key } }).done(function(invoices) {
 // <tr><td>984928</td><td><span class="badge badge-success">YES</span></td><td class="text-right">€32,000</td><td><button type="button" class="btn btn-primary btn-sm">View</button></td></tr>                            
                         	var total=0;
+                        	$("#invoices").empty();
                         	invoices.forEach(function(invoice) {
-                        		total=total+invoice.amount;
                         		var success;
                         		if(invoice.mortage == true){
+                        			total=total+invoice.amount;
                         			success="badge badge-success";
                         		}else{
                         			success="badge badge-danger";
@@ -314,7 +310,8 @@
             					var tr=$('<tr><td>'+invoice.invoiceNumber+'</td><td class="text-right">'+invoice.cathegory+'</td><td><span class=\"'+success+'\">'+invoice.mortage+'</span></td><td class="text-right">€'+invoice.amount+'</td><td><button type="button" class="btn btn-primary btn-sm">View</button></td></tr>');
             					$("#invoices").prepend(tr);
                         	});
-                        	$("#total").text("€"+total);
+                        	$("#invoices").append('<tr><td colspan="4" class="text-right"><a id="total"></a></td><td><button type="button" class="btn btn-success btn-sm">Approve</button><button type="button" class="btn btn-danger btn-sm">Dispute</button></td></tr>');
+                        	$("#total").text("€"+total+"/25000");
                         })
                     });
                 })
