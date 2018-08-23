@@ -33,21 +33,81 @@ public class GiniService {
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
 		ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
-		System.out.println(result.getBody());
 
-		return null;
+
+		return result.getBody();
 	}
 
-	private void createGiniUser(String Token) {
+	private void createGiniUser(String token) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		final String uri = "https://user.gini.net/api/users";
+
+		String data = "{ \"email\": \"nopaperworkers@collabothon.de\", \"password\": \"papersecret1\" }";
+
+		// set headers
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		List<MediaType> array = new ArrayList<>();
+		array.add(MediaType.APPLICATION_JSON);
+		headers.setAccept(array);
+		headers.set("Authorization", "BEARER " + token);
+		HttpEntity<String> entity = new HttpEntity<>(data, headers);
+
+		ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
 
 	}
 
 	public String loginToGini() {
-		createGiniUser(getClientToken());
-		return null;
+		// createGiniUser(getClientToken());
+
+		// RestTemplate restTemplate = new RestTemplate();
+		// final String uri = "https://user.gini.net/api/users";
+		//
+		// String data =
+		// "username=nopaperworkers@collabothon.de&password=papersecret1";
+		//
+		// // encode password and username
+		// String userpass = "collabothon_XX:<client_password>";
+		// String encoding = Base64.encodeBase64String(userpass.getBytes());
+		//
+		// // set headers
+		// HttpHeaders headers = new HttpHeaders();
+		// headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		// List<MediaType> array = new ArrayList<>();
+		// array.add(MediaType.APPLICATION_JSON);
+		// headers.setAccept(array);
+		// headers.set("Authorization", "Basic " + encoding);
+		// HttpEntity<String> entity = new HttpEntity<>(data, headers);
+		//
+		// ResponseEntity<String> result = restTemplate.exchange(uri,
+		// HttpMethod.POST, entity, String.class);
+
+		return getClientToken();
 	}
 
-	public String uploadDocumentToGini() {
+	public String uploadDocumentToGini(String accessToken) {
+
+		RestTemplate restTemplate = new RestTemplate();
+		final String uri = "https://user.gini.net/api/users";
+
+		String data = "username=nopaperworkers@collabothon.de&password=papersecret1";
+
+		// encode password and username
+		String userpass = "collabothon_XX:<client_password>";
+		String encoding = Base64.encodeBase64String(userpass.getBytes());
+
+		// set headers
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		List<MediaType> array = new ArrayList<>();
+		array.add(MediaType.APPLICATION_JSON);
+		headers.setAccept(array);
+		headers.set("Authorization", "BEARER " + accessToken);
+		HttpEntity<String> entity = new HttpEntity<>(data, headers);
+
+		ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
 		return null;
 	}
 

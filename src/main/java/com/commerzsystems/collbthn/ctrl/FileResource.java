@@ -10,11 +10,15 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.commerzsystems.collbthn.customer.Customer;
+import com.commerzsystems.collbthn.parser.CustomerService;
 
 @RestController
 @RequestMapping("/files")
@@ -22,31 +26,37 @@ public class FileResource {
 
 	private final Logger logger = LoggerFactory.getLogger(FileResource.class);
 
+	private final CustomerService cs;
+	
+	@Autowired
+	public FileResource(CustomerService cs) {
+		this.cs = cs;
+	}
+
 	@PostMapping("/upload")
-	public String handleFileUpload(@RequestParam("file") MultipartFile multiPartFile, @RequestParam("path") String path)
-			throws IOException {
+	public Customer handleFileUpload(@RequestParam("file") MultipartFile multiPartFile,
+			@RequestParam("path") String path) throws Exception {
 
 		File file = convert(multiPartFile);
 
 		PDDocument document = PDDocument.load(file);
 
-		System.out.println("PDF loaded");
+		logger.debug("PDF loaded");
 
-		// Adding a blank page to the document
+		//Adding a blank page to the document
 		document.addPage(new PDPage());
-
-		// Saving the document
-		document.save("C:/sample.pdf");
 
 		PDFTextStripper ts = new PDFTextStripper();
 
 		String str = ts.getText(document);
+		//Closing the document
 
-		// Closing the document
+		Customer customer = cs.parse(str);
+
 		document.close();
 
-		return null;
-	}
+		return customer;
+    }
 
 	private File convert(MultipartFile file) throws IOException {
 		File convFile = null;
@@ -58,7 +68,7 @@ public class FileResource {
 		} catch (FileNotFoundException e) {
 			logger.error("Error", e);
 		} catch (IOException e) {
-			logger.error("Error", e);
+			e.printStackTrace();
 		}
 		fos.write(file.getBytes());
 		fos.close();
@@ -68,6 +78,12 @@ public class FileResource {
 	@RequestMapping("/test")
 	String home() {
 		return "Hello World!";
+	}
+	
+
+	@PostMapping("/bankview")
+	public Customer getCustomer(@RequestParam("name") String name) {
+		return cs.getCustomer(name);
 	}
 
 }
