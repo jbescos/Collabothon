@@ -30,4 +30,9 @@ public class FileResource {
         return "Uploaded "+file.getOriginalFilename();
     }
 	
+	@RequestMapping("/test")
+	String home() {
+		return "Hello World!";
+	}
+	
 }
