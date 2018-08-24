@@ -218,6 +218,10 @@
                 
                 
                 </div>
+                <div id="dialog">
+				  <p>Your file was successfully uploaded. Click continue to see your invoices.</p>
+				  <button id="continue" type="button" class="btn btn-primary btn-ok" data-dismiss="modal">Continue</button>
+				</div>
         </div><!-- .content -->
 
 
@@ -229,7 +233,10 @@
         $(document).ready(function() {
             //appendFiles($("#root"), "/");
             $("#loader").hide();
-    
+            $( "#dialog" ).hide();
+    		$("#continue").on('click', function() {
+    			window.location = "index.html?customer=Christina Grund";
+			});
             $('#myForm').ajaxForm({
                 beforeSend: function() {
                     progressBar('0');
@@ -244,7 +251,7 @@
                     $("#submit").prop('disabled', false);
                     $("#closePopup").trigger("click");
                     progressBar('100');
-                    window.location = "index.html?customer=Christina Grund";
+                    $( "#dialog" ).show();
                 }
             });
         });
