@@ -300,7 +300,7 @@
                         	});
                         	$("#invoices").prepend($('<thead><tr><th>Invoice ID</th><th>Category</th><th>Mortgage</th><th>Amount</th><th>Source</th></tr></thead>'));
                         	$("#invoices").append('<tr><td colspan="4" class="text-right"><a id="total"></a></td><td><button type="button" class="btn btn-success btn-sm">Approve</button><button type="button" class="btn btn-danger btn-sm">Dispute</button></td></tr>');
-                        	$("#total").text("€"+total+"/25000");
+                        	$("#total").text("€"+total+"/"+value.upfrontFee);
                         })
                     });
                 })
