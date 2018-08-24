@@ -335,7 +335,7 @@
                         	}else{
                         		$("#invoices").append('<tr><td colspan="4" class="text-right"><a id="total"></a></td><td></td></tr>');
                         	}
-                        	$("#total").text("€"+total+"/€40000");
+                        	$("#total").text("€"+total+"/€" +value.upfrontFee);
                         })
                     });
                 })
