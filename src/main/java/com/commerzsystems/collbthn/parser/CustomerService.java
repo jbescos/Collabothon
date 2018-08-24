@@ -9,6 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ import com.commerzsystems.collbthn.service.MockCathegorizer;
 @Service
 public class CustomerService {
 
+	private final static Logger log = LoggerFactory.getLogger(CustomerService.class);
     private final AtomicInteger idCounter = new AtomicInteger(0);
     private final Map<Integer, Customer> idMap = new ConcurrentHashMap<>();
     private final ICathegorizer cathegorizer;
@@ -46,35 +49,53 @@ public class CustomerService {
             userIdToProcess = idCounter.incrementAndGet();
             newCustomer = new Customer(userIdToProcess, name, address);
             idMap.put(userIdToProcess, newCustomer);
+            log.info("New customer {}", newCustomer);
         } else {
             userIdToProcess = getKeyByValue(idMap, new Customer(name, address));
             newCustomer = idMap.get(userIdToProcess);
+            log.info("Existing customer {}", newCustomer);
         }
+		if (idMap != null) {
+			log.info("Map size {}", idMap.size());
+			Set<Integer> keys = idMap.keySet();
+			for (Integer i : keys) {
+				log.info("Map names {}", idMap.get(i).getName());
+			}
+
+		}
 
         /////////////////////////////////////////////////////////////////
 
 
         //invoice info
 		String totalAmount = "0.00";
+		String invoiceNumber = "";
+		String cathegory = "";
+		boolean description = false;
 		for (String string : input) {
 			if (string.contains("€")) {
-				totalAmount = string.substring(0, input[22].length() - 3);
+				totalAmount = string.substring(0, string.length() - 3);
+			}
+			if(string.contains("Nr.")){
+				int positionStart = string.indexOf("Nr.");
+		        int positionEnd = string.indexOf("Customer");
+		        invoiceNumber  = string.substring(positionStart + 4, positionEnd - 1);
+			}
+			if (description) {
+				String cathegoryLine = string;
+				int euroPosition = cathegoryLine.indexOf("€");
+				String cathegoryLineUntilEuroSign = cathegoryLine.substring(0, euroPosition - 2);
+				cathegory = cathegoryLineUntilEuroSign.substring(2, cathegoryLineUntilEuroSign.lastIndexOf(" "));
+				description = false;
+			}
+			if (string.contains("Pos")) {
+				description = true;
 			}
 		}
 
         int totalAmountInt = currencyToBigDecimalFormat(totalAmount);
 
-        String invoice = input[14];
-        int positionStart = invoice.indexOf("Nr.");
-        int positionEnd = invoice.indexOf("Customer");
-        String invoiceNumber = invoice.substring(positionStart + 4, positionEnd - 1);
-
-		Invoice newInvoice = new Invoice(Integer.valueOf(invoiceNumber), totalAmountInt);
-
-        String cathegoryLine = input[16];
-        int euroPosition = cathegoryLine.indexOf("€");
-        String cathegoryLineUntilEuroSign = cathegoryLine.substring(0, euroPosition - 2);
-        String cathegory = cathegoryLineUntilEuroSign.substring(2, cathegoryLineUntilEuroSign.lastIndexOf(" "));
+        Invoice newInvoice = new Invoice(Integer.valueOf(invoiceNumber), totalAmountInt, cathegory);
         /////////////////////////////////////////////////////////////////
 		cathegory = cathegorizer.categorize(cathegory);
         //insert the method here to DEFINE THE CATHEGORY HERE
@@ -93,19 +114,31 @@ public class CustomerService {
     }
 
 	private void informBank(Customer newCustomer) {
-		if ((callTresholdForCustomer(newCustomer.getId()) - newCustomer.getTotalAmount()) <= 0) {
+		newCustomer.setUpfrontFee(callTresholdForCustomer(newCustomer.getId()));
+		
+		if ((newCustomer.getUpfrontFee() - newCustomer.getTotalAmount()) <= 0) {
 			newCustomer.setUpfrontFeeExceeded(true);
+		} else {
+			newCustomer.setUpfrontFeeExceeded(false);
 		}
-		newCustomer.setUpfrontFeeExceeded(false);
 
 	}
 
 	private int callTresholdForCustomer(int id) {
-		if (id == 0 && id == 1) {
-			return 2000;
+		if (id == 1) {
+			return 20000;
 		}
 		if (id == 2) {
 			return 100000;
+		}
+		if (id == 3) {
+			return 2000;
+		}
+		if (id == 4) {
+			return 30000;
+		}
+		if (id == 5) {
+			return 12345;
 		}
 		return 0;
 
@@ -135,28 +168,18 @@ public class CustomerService {
 
     public static int currencyToBigDecimalFormat(String currency) throws Exception {
 
-        if(!doesMatch(currency,"^[+-]?[0-9]{1,3}(?:[0-9]*(?:[.,][0-9]{0,2})?|(?:,[0-9]{3})*(?:\\.[0-9]{0,2})?|(?:\\.[0-9]{3})*(?:,[0-9]{0,2})?)$"))
-            throw new Exception("Currency in wrong format " + currency);
+		// Replace all dots with commas
+		if (currency.contains(".")) {
+			currency = currency.replaceAll("\\.", "");
+		}
 
-        // Replace all dots with commas
-        currency = currency.replaceAll("\\.", ",");
+		// Remove all commas
+		if (currency.contains(",")) {
+			currency = currency.substring(0, currency.indexOf(","));
+		}
+		return Integer.parseInt(currency);
+	}
 
-        // If fractions exist, the separator must be a .
-        if(currency.length()>=3) {
-            char[] chars = currency.toCharArray();
-            if(chars[chars.length-2] == ',') {
-                chars[chars.length-2] = '.';
-            } else if(chars[chars.length-3] == ',') {
-                chars[chars.length-3] = '.';
-            }
-            currency = new String(chars);
-        }
-
-        // Remove all commas
-        currency = currency.replaceAll(",", "");
-        currency = currency.substring(0, currency.indexOf("."));
-        return Integer.parseInt(currency);
-    }
 
     public static boolean doesMatch(String s, String pattern) {
         try {

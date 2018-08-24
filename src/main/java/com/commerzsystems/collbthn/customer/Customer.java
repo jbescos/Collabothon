@@ -17,6 +17,8 @@ public class Customer {
 
 	private boolean upfrontFeeExceeded;
 
+	private int upfrontFee;
+
 	public Customer(int id, String name, String address) {
 		this.id = id;
 		this.name = name;
@@ -41,6 +43,13 @@ public class Customer {
 			return this.getName().equals(customer.getName()) && this.getAddress().equals(customer.getAddress());
 		}
 		return false;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Customer [invoices=" + invoices.toString() + ", id=" + id + ", name=" + name + ", address=" + address
+				+ ", totalAmount=" + totalAmount + ", upfrontFeeExceeded=" + upfrontFeeExceeded + "]";
 	}
 
 	public List<Invoice> getInvoices() {
@@ -93,6 +102,14 @@ public class Customer {
 
 	public void setUpfrontFeeExceeded(boolean upfrontFeeExceeded) {
 		this.upfrontFeeExceeded = upfrontFeeExceeded;
+	}
+
+	public int getUpfrontFee() {
+		return upfrontFee;
+	}
+
+	public void setUpfrontFee(int upfrontFee) {
+		this.upfrontFee = upfrontFee;
 	}
 
 }
