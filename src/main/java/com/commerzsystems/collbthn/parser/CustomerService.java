@@ -12,7 +12,14 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.commerzsystems.collbthn.customer.Customer;
 import com.commerzsystems.collbthn.customer.Invoice;
@@ -114,7 +121,7 @@ public class CustomerService {
     }
 
 	private void informBank(Customer newCustomer) {
-		newCustomer.setUpfrontFee(callTresholdForCustomer(newCustomer.getId()));
+		newCustomer.setUpfrontFee(callTresholdForCustomerFromCoBa(newCustomer.getName(), newCustomer.getId()));
 		
 		if ((newCustomer.getUpfrontFee() - newCustomer.getTotalAmount()) <= 0) {
 			newCustomer.setUpfrontFeeExceeded(true);
@@ -125,6 +132,7 @@ public class CustomerService {
 	}
 
 	private int callTresholdForCustomer(int id) {
+
 		if (id == 1) {
 			return 20000;
 		}
@@ -139,6 +147,37 @@ public class CustomerService {
 		}
 		if (id == 5) {
 			return 12345;
+		}
+		return 0;
+
+	}
+
+	private int callTresholdForCustomerFromCoBa(String name, int id) {
+
+		String accountId = name.replace(" ", "");
+
+		RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
+		RestTemplate restTemplate = restTemplateBuilder.setConnectTimeout(500).setReadTimeout(500).build();
+		final String uri = "https://api-sandbox.commerzbank.com/accounts-api/v1-s/accounts/" + accountId + "/balances";
+
+		// set headers
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("keyId", "61ed9633-ae6a-4ba6-96fd-94f5398e9844");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		try {
+			ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+			if (result.getStatusCode().equals(HttpStatus.OK)) {
+				String body = result.getBody();
+				String amount = body.substring(body.lastIndexOf("amount"));
+				int beginIndex = amount.indexOf(":");
+				int endIndex = amount.indexOf(".");
+				String balance = amount.substring(beginIndex + 1, endIndex);
+				return Integer.parseInt(balance);
+			}
+		} catch (Exception e) {
+			log.error(e.toString());
+			return callTresholdForCustomer(id);
 		}
 		return 0;
 
