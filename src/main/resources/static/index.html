@@ -280,7 +280,7 @@
             $.ajax({url : '/customer/list', type : 'GET', contentType : 'application/json', data : {}}).done(function(data) {
                 $.each(data, function (key, value) {
                     var li = $('<li id='+key+'><i class="fa fa-id-card-o"></i><a href="#">'+value.name+'</a></li>').attr('expanded', '0');
-                    $("#users").empty();
+                  //  $("#users").empty();
                     $("#users").append(li);
                     $("#"+key).on('click', function() {
                         $.ajax({url : '/customer/invoices', type : 'GET', contentType : 'application/json', data : { id : key } }).done(function(invoices) {

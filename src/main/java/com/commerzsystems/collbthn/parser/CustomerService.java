@@ -56,6 +56,14 @@ public class CustomerService {
             newCustomer = idMap.get(userIdToProcess);
             log.info("Existing customer {}", newCustomer);
         }
+		if (idMap != null) {
+			log.info("Map size {}", idMap.size());
+			Set<Integer> keys = idMap.keySet();
+			for (Integer i : keys) {
+				log.info("Map names {}", idMap.get(i).getName());
+			}
+
+		}
 
         /////////////////////////////////////////////////////////////////
 
