@@ -17,6 +17,8 @@ public class Customer {
 
 	private boolean upfrontFeeExceeded;
 
+	private int upfrontFee;
+
 	public Customer(int id, String name, String address) {
 		this.id = id;
 		this.name = name;
@@ -100,6 +102,14 @@ public class Customer {
 
 	public void setUpfrontFeeExceeded(boolean upfrontFeeExceeded) {
 		this.upfrontFeeExceeded = upfrontFeeExceeded;
+	}
+
+	public int getUpfrontFee() {
+		return upfrontFee;
+	}
+
+	public void setUpfrontFee(int upfrontFee) {
+		this.upfrontFee = upfrontFee;
 	}
 
 }
