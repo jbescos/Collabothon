@@ -1,9 +1,10 @@
 package com.commerzsystems.collbthn.ctrl;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,17 +32,26 @@ public class CustomerResource {
 	}
 
 	@RequestMapping(path = "/list", method = RequestMethod.GET)
-	public ResponseEntity<Map<Integer, Customer>> list() throws IOException {
-		Map<Integer, Customer> customers = cs.getCustomers();
-		Set<Integer> keys = customers.keySet();
-		for (Integer integer : keys) {
-			log.info("Name of customer in REST Call {}", customers.get(integer).getName());
+	public ResponseEntity<Map<Integer, Customer>> list(@RequestParam(value="customer", required=false) String customer) throws IOException {
+		if(customer == null) {
+			return ResponseEntity.ok(cs.getCustomers());
+		}else {
+			Map<Integer, Customer> customers = new HashMap<>();
+			log.info("Loading for {}", customer);
+			for(Entry<Integer, Customer> entry : cs.getCustomers().entrySet()) {
+				log.info("Check name {}", entry.getValue().getName());
+				if(customer.equalsIgnoreCase(entry.getValue().getName())) {
+					customers.put(entry.getKey(), new Customer("Coba", ""));
+					customers.put(-1, new Customer("ING", ""));
+					customers.put(-2, new Customer("mBank", ""));
+				}
+			}
+			return ResponseEntity.ok(customers);
 		}
-		return ResponseEntity.ok(cs.getCustomers());
 	}
 	
 	@RequestMapping(path = "/invoices", method = RequestMethod.GET)
-	public ResponseEntity<List<Invoice>> list(@RequestParam(value="id", required=true) int id) throws IOException {
+	public ResponseEntity<List<Invoice>> invoices(@RequestParam(value="id", required=true) int id) throws IOException {
 		return ResponseEntity.ok(cs.getCustomers().get(id).getInvoices());
 	}
 	
