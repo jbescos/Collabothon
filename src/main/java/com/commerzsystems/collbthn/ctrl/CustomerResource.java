@@ -41,7 +41,9 @@ public class CustomerResource {
 			for(Entry<Integer, Customer> entry : cs.getCustomers().entrySet()) {
 				log.info("Check name {}", entry.getValue().getName());
 				if(customer.equalsIgnoreCase(entry.getValue().getName())) {
-					customers.put(entry.getKey(), new Customer("Coba", ""));
+					Customer coba = new Customer("Coba", "");
+					coba.setUpfrontFee(40000);
+					customers.put(entry.getKey(), coba);
 					customers.put(-1, new Customer("ING", ""));
 					customers.put(-2, new Customer("mBank", ""));
 				}
