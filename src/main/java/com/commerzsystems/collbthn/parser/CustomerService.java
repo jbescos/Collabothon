@@ -134,7 +134,7 @@ public class CustomerService {
 	private int callTresholdForCustomer(int id) {
 
 		if (id == 1) {
-			return 20000;
+			return 40000;
 		}
 		if (id == 2) {
 			return 100000;

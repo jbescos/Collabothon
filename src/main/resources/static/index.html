@@ -214,6 +214,7 @@
 					<div class="page-title">
 						<h1>Mortgages</h1>
 					</div>
+					<p></p>
 				</div>
 			</div>
 		</div>
@@ -238,6 +239,28 @@
 
 
 			</div>
+			
+			<!-- Modal -->
+<div id="approve" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+      	<h4 class="modal-title">Approve</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Click Accept to approve the invoices.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Accept</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+			
 		</div>
 		<!-- .content -->
 
@@ -301,9 +324,11 @@
                         	});
                         	$("#invoices").prepend($('<thead><tr><th>Invoice ID</th><th>Category</th><th>Mortgage</th><th>Amount</th><th>Source</th></tr></thead>'));
                         	if(customer == null){
-                        		$("#invoices").append('<tr><td colspan="4" class="text-right"><a id="total"></a></td><td><button type="button" class="btn btn-success btn-sm">Approve</button><button type="button" class="btn btn-danger btn-sm">Dispute</button></td></tr>');
+                        		$("#invoices").append('<tr><td colspan="4" class="text-right"><a id="total"></a></td><td><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#approve">Approve</button><button type="button" class="btn btn-danger btn-sm">Dispute</button></td></tr>');
+                        	}else{
+                        		$("#invoices").append('<tr><td colspan="4" class="text-right"><a id="total"></a></td><td></td></tr>');
                         	}
-                        	$("#total").text("€"+total+"/"+value.upfrontFee);
+                        	$("#total").text("€"+total+"/€40000");
                         })
                     });
                 })
