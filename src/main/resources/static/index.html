@@ -168,7 +168,7 @@
 					<div class="user-area dropdown float-right">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"
 							aria-haspopup="true" aria-expanded="false"> <img
-							class="user-avatar rounded-circle" src="images/customer.svg"
+							class="user-avatar rounded-circle" id="avatar"
 							alt="User Avatar">
 						</a>
 						<div class="user-menu dropdown-menu">
@@ -214,7 +214,7 @@
 					<div class="page-title">
 						<h1>Mortgages</h1>
 					</div>
-					<p></p>
+					
 				</div>
 			</div>
 		</div>
@@ -226,8 +226,9 @@
 
 		<div class="content mt-3">
 			<div class="row">
-
 				<div class="col-md-12">
+					<p>Banks and Lenders typically require supporting documents to reported invoices in order to get the next up-front payment. Please upload the Invoices & Bills that are related to your mortgage here. Your documents will then be processed and the next up-front payment will be initiated.</p>
+				
 					<div class="card">
 						<div class="card-body">
 							<table class="table table-striped table-bordered" id="invoices">
@@ -294,16 +295,22 @@
 	<script type="text/javascript">
 
         $(document).ready(function() {
-          $('#bootstrap-data-table-export').DataTable();
-          appendFiles();
+        	  var customer = getUrlParameter('customer');
+        	if(customer == null){
+          		$("#avatar").attr('src', 'images/commerzbank.ico');
+          	}else{
+          		$("#avatar").attr('src', 'images/customer.svg');
+          	}
+	          $('#bootstrap-data-table-export').DataTable();
+	          appendFiles(customer);
         } );
 
-        function appendFiles() {
-        	var customer = getUrlParameter('customer');
+        function appendFiles(customer) {
+        	
         	$("#userName").text(customer);
             $.ajax({url : '/customer/list', type : 'GET', contentType : 'application/json', data : { customer : customer}}).done(function(data) {
                 $.each(data, function (key, value) {
-                    var li = $('<li id='+key+'><i class="fa fa-id-card-o"></i><a href="#">'+value.name+'</a></li>').attr('expanded', '0');
+                    var li = $('<li id='+key+'><i class=images/customer.svg"fa fa-id-card-o"></i><a href="#">'+value.name+'</a></li>').attr('expanded', '0');
                   //  $("#users").empty();
                     $("#users").append(li);
                     $("#"+key).on('click', function() {
